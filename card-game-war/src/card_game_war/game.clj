@@ -38,9 +38,9 @@
   (let [p1-card-value (get card-values (nth player1-card 1))
        p2-card-value (get card-values (nth player2-card 1))]
   (cond
-    (= p1-card-value p2-card-value) -1
-    (> p1-card-value p2-card-value) 0
-    :else 1)))
+    (= p1-card-value p2-card-value) -1 ; tie
+    (> p1-card-value p2-card-value) 0 ; player1 wins
+    :else 1))) ; player 2 wins
 
 (defn play-game [player1-cards player2-cards]
   (cond
@@ -73,12 +73,12 @@
               (let [war-round (play-round (nth player1-cards (+ war-count 2))
                                           (nth player2-cards (+ war-count 2)))]
                 (cond
-                  (= war-round -1) (recur (+ war-count 2))
-                  (= war-round 0)
+                  (= war-round -1) (recur (+ war-count 2)) ; tie
+                  (= war-round 0) ; player1 wins war
                   (play-game (post-round-shift
                               player1-cards (nth player2-cards 0 war-count))
                              (subvec player2-cards war-count))
-                  (= war-round 1)
+                  (= war-round 1) ;  player 2 wins war
                   (play-game (subvec player2-cards war-count)
                              (post-round-shift
                               player1-cards (nth player2-cards 0 war-count))))
